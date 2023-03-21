@@ -71,5 +71,7 @@ Each application of a `diff` operator reduces array size by `-1`.
 
 ### 1D Simple shear model with fluid weakening
 
+From the original [publication](https://www.sciencedirect.com/science/article/abs/pii/S0040195121003085) of Bras et al., 2021.
+
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_04.png" width=350px height=350px>
 
