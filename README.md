@@ -1,8 +1,8 @@
 # Deformation Reaction Course 2023
 
-## Day 1 - Day2: training :D
+## Day 1 - Day2: Training
 
-We get familiar with damped pseudo-transient integration.
+We get familiar with damped pseudo-transient integration for solving transient and steady state balance equations.
 
 ### 1D heat equation 
 
