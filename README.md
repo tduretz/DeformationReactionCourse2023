@@ -12,9 +12,36 @@ If successful, you should see this: `(DeformationReactionCourse2023) pkg>`. In o
 
 and wait a bit... If some packages fail to precompile, just restart Julia and then it should work.
 
-## Day 1 - Day2: Training
+## Day 1 - Day 2: Training
 
 We get familiar with damped pseudo-transient integration for solving transient and steady state balance equations.
+The aim is to solve balance laws of the following form:
+
+$$
+\frac{\partial H}{\partial t} + \frac{\partial q}{\partial x} = 0
+$$
+
+where $H$ is the quantity of interest and $q$ is the its flux (e.g. advection, diffusion...). We seek for an implicit solution, the equilibrium can not be obtained directly, instead there will be an imbalance or residual, $R$:
+
+$$
+R = \frac{\partial H}{\partial t} + \frac{\partial q}{\partial x}.
+$$
+
+The equilibrium condition can be reached iteratively. Here we use a pseudo-transient integration scheme and we state that:
+
+$$
+\frac{\partial H}{\partial \tau} = R
+$$
+
+The above equation can integrated in *pseudo time* ($\tau$) in an explicity manner such that:
+
+$$
+H^\mathrm{new} = H^\mathrm{old} + \Delta \tau R,
+$$
+
+where $\Delta \tau$ is the pseudo transient time step. It is a numerical parameter whose value is bounded by [stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis).
+
+
 
 ### 1D heat equation 
 
