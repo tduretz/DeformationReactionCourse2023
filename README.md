@@ -27,7 +27,11 @@ $$
 R = \frac{\partial H}{\partial t} + \frac{\partial q}{\partial x}.
 $$
 
-The equilibrium condition can be reached iteratively. Here we use a pseudo-transient integration scheme and we state that:
+The equilibrium condition can be reached iteratively. 
+
+### Pseudo-transient integration
+
+Here we use a pseudo-transient integration scheme and we state that:
 
 $$
 \frac{\partial H}{\partial \tau} = R
@@ -36,10 +40,12 @@ $$
 The above equation can integrated in *pseudo time* ($\tau$) in an explicity manner such that:
 
 $$
-H^\mathrm{new} = H^\mathrm{old} + \Delta \tau R,
+H^\mathrm{iter} = H^{\mathrm{iter}-1} + \Delta \tau R,
 $$
 
-where $\Delta \tau$ is the pseudo transient time step. It is a numerical parameter whose value is bounded by [stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis).
+where $\Delta \tau$ is the pseudo transient time step. It is a numerical parameter whose value is bounded by [stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis). $\mathrm{iter}$ corresponds to the pseudo transient iteration count. Once pseudo-transient steady state is achived, $\frac{\partial H}{\partial \tau} \rightarrow 0$, thus  $R \rightarrow 0$ and our target is reached: $\frac{\partial H}{\partial t} + \frac{\partial q}{\partial x} = 0$
+
+### Pseudo-transient integration with damping
 
 
 
@@ -62,3 +68,8 @@ Flowchart of the pseudo-transient iteration cycle:
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_03.png" width=350px height=350px>
 
 Each application of a `diff` operator reduces array size by `-1`.
+
+### 1D Simple shear model with fluid weakening
+
+<img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_04.png" width=350px height=350px>
+
