@@ -1,5 +1,17 @@
 # Deformation Reaction Course 2023
 
+## Day 0 - Get started
+
+Once [Julia](https://julialang.org) is installed. From package mode (type ']'), you can activate the project (from the current directory) by typing:
+
+`activate .`
+
+If successful, you should see this: `(DeformationReactionCourse2023) pkg>`. In order to download/install all necessary packages required for this project, type:
+
+`instantiate`
+
+and wait a bit... If some packages fail to precompile, just restart Julia and then it should work.
+
 ## Day 1 - Day2: Training
 
 We get familiar with damped pseudo-transient integration for solving transient and steady state balance equations.
