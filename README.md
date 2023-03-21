@@ -48,6 +48,7 @@ where $\Delta \tau$ is the pseudo transient time step. It is a numerical paramet
 ### Pseudo-transient integration with damping
 
 
+To our knowledge, the earliest description of this solution method can be found in [Frankel, 1950](https://www.jstor.org/stable/2002770). 
 
 ### 1D heat equation 
 
@@ -69,9 +70,13 @@ Flowchart of the pseudo-transient iteration cycle:
 
 Each application of a `diff` operator reduces array size by `-1`.
 
-### 1D Simple shear model with fluid weakening
+## Day 2 - 1D Simple shear model with fluid weakening
 
 From the original [publication](https://www.sciencedirect.com/science/article/abs/pii/S0040195121003085) of Bras et al., 2021.
 
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_04.png" width=350px height=350px>
+
+More implementation details
+
+<img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_05.png" width=350px height=350px>
 
