@@ -20,6 +20,13 @@ function InitialiseGrid(ncr, rmax, rmin, rinc)
     return rc, rv, Δrc, Δri, rv0, ncr_inc
 end
 
+function compDensity!(ρ, ρ0, X, Xo, Xeq, P, Δt, Pr, dPr, τk, ρ0i, ρ0f, β)
+    Xeq .= 1 .- 0.5 .* (erfc.((P .- Pr)./dPr));
+    X   .= Δt/(τk+Δt) .* Xeq .+ τk/(τk+Δt) .* Xo;
+    ρ0  .= X .* ρ0f .+ (1 .-X) .* ρ0i
+    ρ   .= ρ0 .* exp.(β .* P)
+end
+
 function main()
     # Spatial domain:
     rmin    = 0.0        # m
