@@ -150,9 +150,11 @@ Check out [pdf presentation](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/f
 This is taken from the original publication of [Yamato et al., 2022](https://www.sciencedirect.com/science/article/abs/pii/S0012821X2200156X).
 
 Computation of $X$ using kinetic law:
+
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_06.png" width=350px>
 
 Computation of $\rho_0$ from $X$ and computation of $\rho$ from $\rho_0$ and $P$:
+
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_07.png" width=350px>
 
 
