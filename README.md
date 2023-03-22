@@ -9,6 +9,8 @@ The course takes place at Goethe University of Frankfurt. It is supervised by P.
 
 ## Day 0 - Get started
 
+Introduction and motivation based on geological observations, check out the [presentation](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiJsB21M29urnbjrPZteDJ/ReactionDef_Part01_compressed.pdf).
+
 Once [Julia](https://julialang.org) is installed. From package mode (type ']'), you can activate the project (from the current directory) by typing:
 
 `activate .`
@@ -144,5 +146,6 @@ Example of solution:
 
 ## Day 3
 
+Check out [pdf presentation](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fi9gsHsvSbfsihdGAtW44d/ReactionDef_Part02_compressed.pdf).
 This is taken from the original publication of [Yamato et al., 2022](https://www.sciencedirect.com/science/article/abs/pii/S0012821X2200156X).
 
