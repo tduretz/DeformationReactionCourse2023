@@ -53,7 +53,7 @@ $$
 H^\mathrm{iter} = H^{\mathrm{iter}-1} + \Delta \tau R,
 $$
 
-where $\Delta \tau$ is the pseudo transient time step. It is a numerical parameter whose value is bounded by [stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis). $\mathrm{iter}$ corresponds to the pseudo transient iteration count. Once pseudo-transient steady state is achived, $\frac{\partial H}{\partial \tau} \rightarrow 0$, thus  $R \rightarrow 0$ and our target is reached: $\frac{\partial H}{\partial t} + \frac{\partial q}{\partial x} = 0$
+where $\Delta \tau$ is the pseudo transient time step. It is a numerical parameter whose value is bounded by [stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis). $\mathrm{iter}$ corresponds to the pseudo transient iteration count. Once pseudo-transient steady state is achieved, $\frac{\partial H}{\partial \tau} \rightarrow 0$, thus  $R \rightarrow 0$ and our target is reached: $\frac{\partial H}{\partial t} + \frac{\partial q}{\partial x} = 0$
 
 ### Pseudo-transient integration with damping
 
