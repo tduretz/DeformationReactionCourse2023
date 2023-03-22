@@ -142,3 +142,7 @@ Example of solution:
 
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/ShearZoneFluidWeakening.gif" width=350px>
 
+## Day 3
+
+This is taken from the original publication of [Yamato et al., 2022](https://www.sciencedirect.com/science/article/abs/pii/S0012821X2200156X).
+
