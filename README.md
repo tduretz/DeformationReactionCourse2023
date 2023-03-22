@@ -158,6 +158,7 @@ Computation of $\rho_0$ from $X$ and computation of $\rho$ from $\rho_0$ and $P$
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_07.png" width=350px>
 
 Evolution of density using the kinetic law:
+
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/X_density_evolution.gif" width=350px>
 
 
