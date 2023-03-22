@@ -110,5 +110,5 @@ More implementation details
 
 Example of solution:
 
-<img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/ShearZoneFluidWeakening.gif" width=350px height=350px>
+<img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/ShearZoneFluidWeakening.gif" width=350px>
 
