@@ -4,7 +4,7 @@ The course takes place at Goethe University of Frankfurt. It is supervised by P.
 
 |       |   |
 | ----------- | ----------- |
-| <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/GU.svg" width=150px height=150px>       | <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/Heraeus.png" width=150px>       |
+| <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/GU.svg" width=150px>       | <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/Heraeus.png" width=150px>       |
 
 
 ## Day 0 - Get started
