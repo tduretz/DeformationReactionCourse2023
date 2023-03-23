@@ -143,10 +143,11 @@ function main_HC()
     # plot initial Xs as function of x 
     # plot initial ϕ as function of x 
     # plot initial Xs as function of x 
+    p4 = plot(xc, Pf./1e9, ylabel = "Pf", label=:none)
     p1 = plot(xc, Xs, ylabel = "Xs", label=:none)
     p2 = plot(xc, ϕ, ylabel = "ϕ", label=:none)
-    p3 = plot(xc, ρT, ylabel = "ρT", xlabel="P", label=:none)
-    display(plot(p1, p2, p3, layout=(3,1)))
+    p3 = plot(xc, ρT, ylabel = "ρT", xlabel="x", label=:none)
+    display(plot( p4, p1, p2, p3, layout=(4,1)))
 end
 
 main_HC()
