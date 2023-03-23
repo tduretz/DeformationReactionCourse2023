@@ -1,4 +1,4 @@
-Governing equations:
+The aim of the exercise if to couple reaction and fluid flow. For this purpose, data have been preliminary generated using equilibrium themodynamic computations (e.g. [PerpleX](https://www.perplex.ethz.ch)). They are referred to as look-up tables ('_lt'). The main partial differential equation is the total mass conservation, which can be solved for the total density ($\rho_T$). Other variables are read (i.e, *interpolated*) from the look-up table (`LUT_plagio_eclo.mat`). The governing equations are formulated as:
 
 $$
 \begin{align}
@@ -13,7 +13,6 @@ q_{\rho_T} = -\rho_f\frac{k\phi^3}{\eta_f}\left( \frac{\partial P_f}{\partial x}
 $$
 
 [Link to the lecture](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiKVUb5ZAUMuQsTjgBEHUA/ReactionDef_Part03_compressed.pdf)
-
 
 Computation of solid fraction $X_s$, porosity $\phi$ and total density $\rho^T$:
 
