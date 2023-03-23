@@ -1,6 +1,6 @@
 ## Day 1: Training
 
-We get familiar with damped pseudo-transient integration for solving transient and steady state balance equations.
+We get familiar with damped pseudo-transient integration for solving transient and steady state balance equations. [Lecture notes](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiXUcFqSEWx22HVLHjom1z/2_SolvingEquations_compressed.pdf).
 
 ### Problem statement
 
