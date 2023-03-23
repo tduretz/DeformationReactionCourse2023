@@ -25,4 +25,4 @@ and wait a bit... If some packages fail to precompile, just restart Julia and th
 
 ## [Day 2: Shear deformation and fluid weakening](https://github.com/tduretz/DeformationReactionCourse2023/blob/main/scripts/day2)
 
-## [Day 3: Deformation induced by progressivive densification](https://github.com/tduretz/DeformationReactionCourse2023/blob/main/scripts/day3)
+## [Day 3: Deformation induced by progressive densification](https://github.com/tduretz/DeformationReactionCourse2023/blob/main/scripts/day3)
