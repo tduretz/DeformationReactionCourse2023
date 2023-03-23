@@ -14,7 +14,7 @@ $$
 
 [Link to the lecture](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiKVUb5ZAUMuQsTjgBEHUA/ReactionDef_Part03_compressed.pdf)
 
-Example of solution: Progressive ecligitization of the impermeable granulite
+Example of solution: Progressive eclogitization of impermeable granulite
 
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/HC1D_fps50.gif" width=500px>
 
