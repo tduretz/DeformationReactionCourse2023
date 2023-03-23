@@ -125,9 +125,10 @@ function main_HC()
     k_ηf   = zeros(ncx+1)
     qρT    = zeros(ncx+1)
     # Initialise
-    Pf   .= Pbg        # Background pressure without fluid pressure perturbation
+    Pf    .= Pbg        # Background pressure without fluid pressure perturbation
     Pf[xc .<= wini] .+= Pamp
-    Pfi   = copy(Pf)
+    Pfi    = copy(Pf)
+    PfWest = Pfi[1]
     # Density look up - Initial perturbation is fully eclogitised from the start
     for ip = 1:ncx
         ρs[ip] = Itp1D_scalar1( Pf_lt, ρs_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
@@ -144,14 +145,13 @@ function main_HC()
     # TIME LOOP:
     anim = @animate for it = 1:nt
         # Old values
-        rel  = rel0
         ρT0 .= ρT
         # Relative residual
         rρ0  = 1.0
         # Define transient time step: ------
-        ϕe   .= [ϕ[1]; ϕ[1:end]; ϕ[end]]
+        ϕe   .= [ϕ[1]; ϕ; ϕ[end]]
         ϕv   .= 0.5* (ϕe[1:end-1] + ϕe[2:end])
-        k_ηf .= k_ηf0 .*ϕv .^npow
+        k_ηf .= k_ηf0 .* ϕv .^npow
         Dcmax = maximum(max(k_ηf[1:end-1],k_ηf[2:end]) ./ βf)
         Δτ    = CFL*Δx^2*minimum(ρf)/maximum(ρT)/Dcmax
         Δt    = Δτ*dt_fact
@@ -173,10 +173,10 @@ function main_HC()
                     
             # (2) Boundary conditions
 
-            #  ---> fill ϕe and ρfe (copy internal value at Fictitious points)
+            #  ---> fill ϕe and ρfe (copy internal value at fictitious points)
 
             #  ---> set up fluid pressure boundary condition:
-            # with constant pressure Pfi[1] at the west side
+            # with constant pressure PfWest at the west side
 
             # (3) average 
             #  ---> ϕe  --> ϕv  
@@ -191,7 +191,7 @@ function main_HC()
 
             # (6): Update rate dρT_dτ
 
-            # (7): Update rate ρT (on all points)
+            # (7): Update ρT (on all points)
 
             if iter==1 || mod(iter,nout) == 0
                 rρ     = norm(Rρ)/length(Rρ)
