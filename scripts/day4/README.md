@@ -14,7 +14,7 @@ $$
 
 [Link to the lecture](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiKVUb5ZAUMuQsTjgBEHUA/ReactionDef_Part03_compressed.pdf)
 
-Computation of solid fraction $X_s$, porosity $\phi$ and total density $\rho^T$:
+Computation of solid fraction $X_s$, porosity $\phi$ and total density $\rho_T$:
 
 <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/pict_08.png" width=500px>
 
