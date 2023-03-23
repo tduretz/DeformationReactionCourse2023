@@ -130,11 +130,11 @@ function main_HC()
     # Density look up - Initial perturbation is fully eclogitised from the start
     for ip = 1:ncx
         # 1) Interpolate ρs from ρs_lt
-        # 1) Interpolate ρf from ρf_lt
-        # 1) Interpolate βf from βf_lt
+        # 2) Interpolate ρf from ρf_lt
+        # 3) Interpolate βf from βf_lt
     end
 
-    # Compute initial porosity Xs
+    # Compute initial Xs
     
     # Compute initial porosity:
    
