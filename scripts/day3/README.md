@@ -1,6 +1,7 @@
 ## Day 3
 
-Check out [pdf presentation](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fi9gsHsvSbfsihdGAtW44d/ReactionDef_Part02_compressed.pdf).
+The aim of this exercise is to simulate the effect of a progressive transformation on the evolution of the stress field. The model is constructed in polar coordinates, solutions are obtained along the radial axis ($r$). Linear momemtum balance is combined with mass conservation. Densification of a partof the domain links to volumetric strains and a deviatoric stress increase in the surrounding material. 
+Check out the [pdf presentation](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fi9gsHsvSbfsihdGAtW44d/ReactionDef_Part02_compressed.pdf).
 This is taken from the original publication of [Yamato et al., 2022](https://www.sciencedirect.com/science/article/abs/pii/S0012821X2200156X).
 
 The governing equations are:
@@ -19,6 +20,7 @@ $$
 \end{align}
 $$
 
+The model includes transformation kinetics, which is an additional ordinary differential equation to be solved. 
 The density is made function of reaction progress ($X$) depending on a kinetic law and presure ($P$):
 
 $$
