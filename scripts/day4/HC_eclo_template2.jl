@@ -60,7 +60,7 @@ function main_HC()
     Pf_lt, Pfc_lt, ΔP_lt, βf_lt, ρf_lt, ρs_lt, ρT_lt, Xs_lt, ϕ_lt, ρg_lt, ρe_lt, ρw_lt, Pf_gr_out = LoadData() 
 
     # Total solid mass (ρgranulite @ initial pressure Pbg)---
-    # ---> Interpolate ρs_tot = f(P_inf) from the database 
+    # ---> Interpolate ρs_tot = f(Pbg) from the database 
 
     # proportion of the solid phase:
     # ---> Compute Xs_lt using Xs_g, Xs_e, Xs_g
