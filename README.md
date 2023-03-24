@@ -11,6 +11,10 @@ The course takes place at Goethe University of Frankfurt. It is supervised by P.
 
 Introduction and motivation based on geological observations: check out the [__presentation__](https://hessenbox-a10.rz.uni-frankfurt.de/getlink/fiJsB21M29urnbjrPZteDJ/ReactionDef_Part01_compressed.pdf) that describes structures arising from the interaction between deformation and transformation (*granulite* to *eclogite*).
 
+<img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/granulite_eclogite.png" width=700px>
+
+### Setting up Julia environment
+
 Once [Julia](https://julialang.org) is installed. From package mode (type ']'), you can activate the project (from the current directory) by typing:
 
 `activate .`
