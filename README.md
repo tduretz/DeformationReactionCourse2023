@@ -6,6 +6,7 @@ The course takes place at Goethe University of Frankfurt. It is supervised by P.
 | ----------- | ----------- |
 | <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/GU.svg" width=150px>       | <img src="https://github.com/tduretz/DeformationReactionCourse2023/blob/main/images/Heraeus_foundation_logo.svg" width=300px>       |
 
+[Goethe University course catalogue: LSF/QIS entry](https://qis.server.uni-frankfurt.de/qisserver/rds?state=verpublish&status=init&vmfile=no&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung&veranstaltung.veranstid=356990&purge=y&topitem=lectures&subitem=editlecture&asi=Al3IILKHrvzOSQjzunnX)
 
 ## Day 0 - Get started
 
