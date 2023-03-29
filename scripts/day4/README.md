@@ -1,3 +1,4 @@
+From Bras et al., submitted. 
 The aim of the exercise if to couple reaction and fluid flow. For this purpose, data has been preliminary generated using equilibrium themodynamic computations (e.g. [PerpleX](https://www.perplex.ethz.ch)). They are referred to as look-up tables (`_lt`). The main partial differential equation is the total mass conservation, which can be solved for the total density ($\rho_T$). Other variables are read (i.e, *interpolated*) from the look-up table (`LUT_plagio_eclo.mat`). The governing equations are formulated as:
 
 $$
