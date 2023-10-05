@@ -1,6 +1,6 @@
 # Deformation Reaction Course 2023
 
-The course takes place at Goethe University of Frankfurt. It is supervised by P. Yamato and T. Duretz, thanks to the support of the Heraeus foundation.
+The course takes place at the Goethe University of Frankfurt. It is supervised by P. Yamato and T. Duretz, thanks to the support of the Heraeus foundation.
 
 |       |   |
 | ----------- | ----------- |
