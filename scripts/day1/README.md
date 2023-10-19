@@ -54,7 +54,7 @@ $$
 H^\mathrm{iter} = H^{\mathrm{iter}-1}  + \Delta \tau \frac{\partial H}{\partial \tau}^\mathrm{iter}.
 $$
 
-Here we have ome more crucial numerical parameter $\theta_1$. Efficient convergence can be achieved by fine tuning this parameter. There is so far no automatic way to determine the optimal value of this parameter. Analytical values can be obtained for idealised cases are were proven to be relatively robust for some cases ([Raess et al., 2022](https://gmd.copernicus.org/articles/15/5757/2022/)). 
+Here we have one more crucial numerical parameter $\theta_1$. Efficient convergence can be achieved by fine tuning this parameter. There is so far no automatic way to determine the optimal value of this parameter. Analytical values can be obtained for idealised cases are were proven to be relatively robust for some cases ([Raess et al., 2022](https://gmd.copernicus.org/articles/15/5757/2022/)). 
 To our knowledge, the earliest description of this solution method can be found in [Frankel, 1950](https://www.jstor.org/stable/2002770). One main advantage of this approach is the possibility to port codes to GPU computing in a rather simple manner, very useful resources canbe found on the [PDE on GPU website](https://pde-on-gpu.vaw.ethz.ch). 
 
 ### 1D heat equation 
