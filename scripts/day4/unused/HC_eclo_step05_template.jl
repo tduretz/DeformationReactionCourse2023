@@ -1,5 +1,5 @@
 # 1D HC model - Eclogitisation of granulite rock (Bras et al., 2023) 
-using Plots, LinearAlgebra
+using Plots
 using SpecialFunctions
 using Printf
 using MAT
@@ -71,7 +71,6 @@ function main_HC()
     nt       = 1000
     θ        = 0.75  
     dt_fact  = 100
-    niter    = 1e5
     # preprocessing
     Δx       = Lx/ncx              # grid spacing
     xc       = LinRange(0.0, Lx, ncx)  # grid points cooarrdinates
@@ -102,6 +101,7 @@ function main_HC()
     p1 = plot!(Pf_lt./1e9, ρf_lt,color=:red, label= "ρf(LUT)", marker = 0.0,linewidth = 2.0)
     p1 = plot!(Pf_lt./1e9, ρT_lt,color=:black, linestyle=:dash, label= "ρT(LUT)", marker = 0.0,linewidth = 2.0)
     display(p1)
+    # LET'S DESIGN THE INITIAL MODEL
     # Allocate centroid arrays
     Pf     = zeros(ncx)
     Pfr    = zeros(ncx)
@@ -123,12 +123,10 @@ function main_HC()
     ϕv     = zeros(ncx+1)
     ρfv    = zeros(ncx+1)
     k_ηf   = zeros(ncx+1)
-    qρT    = zeros(ncx+1)
     # Initialise
     Pf   .= Pbg        # Background pressure without fluid pressure perturbation
     Pf[xc .<= wini] .+= Pamp
-    Pfi    = copy(Pf)
-    PfWest = Pfi[1]
+    Pfi   = copy(Pf)
     # Density look up - Initial perturbation is fully eclogitised from the start
     for ip = 1:ncx
         ρs[ip] = Itp1D_scalar1( Pf_lt, ρs_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
@@ -141,90 +139,91 @@ function main_HC()
     ϕ   .= 1.0 .- ρs_tot ./ ρs ./ Xs
     # Total density:
     ρT  .= (1.0 .- ϕ) .* ρs .+ ϕ .* ρf
+    # plot
+    p1 = plot(xc, Xs, ylabel = "Xs")
+    p2 = plot(xc, ϕ, ylabel = "ϕ")
+    p3 = plot(xc, ρT, ylabel = "ρT", xlabel="P")
+    display(plot(p1, p2, p3))
 
-    # TIME LOOP:
-    anim = @animate for it = 1:nt
-        # Old values
-        rel  = rel0
-        ρT0 .= ρT
-        # Relative residual
-        rρ0  = 1.0
-        # Define transient time step: ------
-        ϕe   .= [ϕ[1]; ϕ[1:end]; ϕ[end]]
-        ϕv   .= 0.5* (ϕe[1:end-1] + ϕe[2:end])
-        k_ηf .= k_ηf0 .*ϕv .^npow
-        Dcmax = maximum(max(k_ηf[1:end-1],k_ηf[2:end]) ./ βf)
-        Δτ    = CFL*Δx^2*minimum(ρf)/maximum(ρT)/Dcmax
-        Δt    = Δτ*dt_fact
-        # Pseudo transient loop
-        for iter = 1:niter
-            # (0) Reverse LUT : Get fluid pressure:
-            for ip=1:ncx
-                Pfr[ip] = Itp1D_rev_scalar1(ρT_lt, Pf_lt, ρT[ip])
-            end
-            Pf .= (1.0 .- rel) .* Pf .+ rel .* Pfr
-            # (1) Density look up + Xs [already done before] ---
-            for ip = 1:ncx 
-                ρs[ip] = Itp1D_scalar1( Pf_lt, ρs_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
-                ρf[ip] = Itp1D_scalar1( Pf_lt, ρf_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
-                βf[ip] = Itp1D_scalar1( Pf_lt, βf_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
-            end
-            Xs  .= Xs_g .* ones(ncx) .- (Xs_g .- Xs_e) .* (Pf .> Pf_gr_out)
+    # # TIME LOOP:
+    # anim = @animate for it = 1:nt
+    #     # Old values
+    #     rel  = rel0
+    #     ρT0 .= ρT
+    #     # Relative residual
+    #     rρ0  = 1.0
+    #     # Define transient time step: ------
+    #     ϕe  .= [ϕ[1]; ϕ[1:end]; ϕ[end]]
+    #     ϕv  .= 0.5* (ϕe[1:end-1] + ϕe[2:end])
+    #     k_ηf     .= k_ηf0 .*ϕv .^npow
+    #     Dcmax     = maximum(max(k_ηf[1:end-1],k_ηf[2:end]) ./ βf)
+    #     Δτ = CFL*Δx*Δx*minimum(ρf)/maximum(ρT)/Dcmax
+    #     Δt = Δτ*dt_fact
+    #     # Pseudo transient loop
+    #     for iter = 1:1e5
+    #         # (0) Reverse LUT : Get fluid pressure:
+    #         for ip=1:ncx
+    #             Pfr[ip] = Itp1D_rev_scalar1(ρT_lt, Pf_lt, ρT[ip])
+    #         end
+    #         Pf .= (1.0 .- rel) .* Pf .+ rel .* Pfr
+    #         # (1) Density look up + Xs [already done before] ---
+    #         for ip = 1:ncx 
+    #             ρs[ip] = Itp1D_scalar1( Pf_lt, ρs_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
+    #             ρf[ip] = Itp1D_scalar1( Pf_lt, ρf_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
+    #             βf[ip] = Itp1D_scalar1( Pf_lt, βf_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
+    #         end
+    #         Xs  .= Xs_g .* ones(ncx) .- (Xs_g .- Xs_e) .* (Pf .> Pf_gr_out)
         
-            # (2) Get porosity as fct of ρs and Xh20 (equ. 13) ---
-            ϕ     .= 1.0 .- ρs_tot ./ ρs ./ Xs        
+    #         # (2) Get porosity as fct of ρs and Xh20 (equ. 13) ---
+    #         ϕ     .= 1.0 .- ρs_tot ./ ρs ./ Xs        
             
-            # boundary conditions and averaging
-            ϕe  .= [ϕ[1]; ϕ; ϕ[end]]
-            ρfe .= [ρf[1]; ρf; ρf[end]]
+    #         # boundary conditions and averaging
+    #         ϕe  .= [ϕ[1]; ϕ[1:end]; ϕ[end]]
+    #         ρfe .= [ρf[1]; ρf[1:end]; ρf[end]]
 
-            if t < t_pert
-                 Pfe .= [2.0 .* PfWest .- Pf[2]; Pf[1:end]; Pfe[end-1]]
-            else
-                 Pfe .= [Pf[2]; Pf; Pf[end-1]]
-            end
+    #         if t < t_pert
+    #              Pfe .= [2.0 .* Pfi[1] .- Pf[1]; Pf[1:end]; Pf[end]]
+    #         else
+    #              Pfe .= [Pf[1]; Pf[1:end]; Pf[end]]
+    #         end
+
+    #         ϕv  .= 0.5* (ϕe[1:end-1] + ϕe[2:end])
+    #         ρfv .= 0.5* (ρfe[1:end-1] + ρfe[2:end])
+
+    #         # (3) total mass conservation with darcy flux:
+    #         k_ηf     .= k_ηf0 .*ϕv .^npow
+    #         dρT_dt   .= diff(ρfv .* k_ηf .* diff(Pfe) ./ Δx) ./ Δx
             
-            ϕv  .= 0.5* (ϕe[1:end-1] + ϕe[2:end])
-            ρfv .= 0.5* (ρfe[1:end-1] + ρfe[2:end])
+    #         # update:            
+    #         Rρ      .= dρT_dt .-  (ρT .- ρT0) ./ Δt
+    #         if t < t_pert Rρ[xc .<= wini] .= 0.0; end
+    #         dρT_dτ   .= Rρ .+ (1 - θ) .* dρT_dτ
+    #         ρT      .+= Δτ .* dρT_dτ
 
-            # (3) total mass conservation with darcy flux:
-            k_ηf     .= k_ηf0 .*ϕv .^npow
-            qρT      .= .-ρfv .* k_ηf .* diff(Pfe)./Δx
+    #         if iter==1 || mod(iter,nout) == 0
+    #             rρ     = norm(Rρ)/length(Rρ)
+    #             if iter==1 rρ0=rρ; end
+    #             @printf("Step %04d --- Iteration %05d\n", it, iter)
+    #             @printf("||rρ|| = %2.10e\n", rρ/rρ0)
+    #             if (rρ/rρ0 < eps_err) break; end
+    #         end
 
-            # Residual
-            Rρ      .= .-(ρT .- ρT0) ./ Δt .- diff(qρT)./Δx  
-            if t < t_pert Rρ[xc .<= wini] .= 0.0; end
-          
-            # Update rate         
-            dρT_dτ   .= Rρ .+ (1 - θ) .* dρT_dτ
+    #     end
 
-            # Update rho
-            ρT      .+= Δτ .* dρT_dτ
+    #     t = t + Δt
 
-            if iter==1 || mod(iter,nout) == 0
-                rρ     = norm(Rρ)/length(Rρ)
-                if iter==1 rρ0=rρ; end
-                @printf("Step %04d --- Iteration %05d\n", it, iter)
-                @printf("||rρ|| = %2.10e\n", rρ/rρ0)
-                if (rρ/rρ0 < eps_err) break; end
-            end
-
-        end
-
-        t = t + Δt
-
-        # Plot results:
-        if it==1 || mod(it,5) == 0
-            tD = t/24/3600
-            p2 = plot(xc,Pfi./1e9,color=:black, label= "Pfi", marker = 0.0,linewidth = 1.0,
-                    xlabel = "xc [m]", ylabel = "P [GPa]")
-            p2 = plot!(xc,1.94.*ones(size(xc)), linestyle=:dash, color=:green, label= "Pr", marker = 0.0,linewidth = 2.0,α=0.5)
-            p2 = plot!(xc,Pf./1e9,color=:red, linestyle=:dash, label= "Pf", 
-                    marker = 2.0,linewidth = 1.0,
-                    title = " t = $(round(tD,digits=2)) days")
-            display(p2)
-        end
-    end
+    #     # Plot results:
+    #     if it==1 || mod(it,5) == 0
+    #         tD = t/24/3600
+    #         p2 = plot(xc,Pfi./1e9,color=:black, label= "Pfi", marker = 0.0,linewidth = 1.0,
+    #                 xlabel = "xc [m]", ylabel = "P [GPa]")
+    #         p2 = plot!(xc,1.94.*ones(size(xc)), linestyle=:dash, color=:green, label= "Pr", marker = 0.0,linewidth = 2.0,α=0.5)
+    #         p2 = plot!(xc,Pf./1e9,color=:red, linestyle=:dash, label= "Pf", 
+    #                 marker = 2.0,linewidth = 1.0,
+    #                 title = " t = $(round(tD,digits=2)) days")
+    #         display(p2)
+    #     end
+    # end
 end
 
 main_HC()
