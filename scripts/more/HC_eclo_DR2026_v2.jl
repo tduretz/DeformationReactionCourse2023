@@ -7,38 +7,43 @@ using MAT
 const derivative = true
 const primitive  = false 
 
-function update_Pf(Pf, ρT, t, p, LU)
+function update_Pf(Pf, Pf_phys, Pf_it, ρT, t, p, LU)
 
-    for i=2:size(Pf,1)-1
-        Pf[i] = Itp1D_rev_scalar1(LU.ρT_lt, LU.Pf_lt, ρT[i])
+    rel = p.rel
+
+    ρT[1]   = t < p.t_pert ?  2*p.ρTWest-ρT[2] : ρT[2]
+    ρT[end] = ρT[end-1]
+
+    for i=1:size(Pf,1)-0
+        Pf_phys[i] = Itp1D_rev_scalar1(LU.ρT_lt, LU.Pf_lt, ρT[i])
+        Pf[i]      = rel*Pf_phys[i] + (1-rel)*Pf_it[i]
     end
-    Pf[1] = t < p.t_pert ?  2*p.PfWest-Pf[2] : Pf[2]
-    Pf[end] = Pf[end-1]
+
 end
 
-function residual_local(ρT, ρT0, xc, t, p, LU, Δx, Δt, i, ncx)
+function residual_local(ρT, ρT0, Pf_it, xc, t, p, LU, Δx, Δt, i, ncx)
+    rel = p.rel
 
     # BC on ρT ?
-    Pf  = MVector{3}( Itp1D_rev_scalar1(LU.ρT_lt, LU.Pf_lt, ρT[ii]) for ii in 1:3)
-
-    # BC on pf
     if i==2
-        Pf[1] = t < p.t_pert ?  2*p.PfWest-Pf[2] : Pf[2]
+        ρT[1] = t < p.t_pert ?  2*p.ρTWest-ρT[2] : ρT[2]
     end
     if i==ncx-1
-        Pf[3] = Pf[2]
+        ρT[3] = ρT[2]
     end
 
+    # Database
+    Pf_phys = SVector{3}( Itp1D_rev_scalar1(LU.ρT_lt, LU.Pf_lt, ρT[ii]) for ii in 1:3)
+    Pf  = SVector{3}( rel*Pf_phys[ii]+(1-rel)*Pf_it[ii]  for ii in 1:3) 
     ρs  = SVector{3}( Itp1D_scalar1( LU.Pf_lt, LU.ρs_lt[:], Pf[ii], LU.ΔP_lt, LU.Pf_lt[1]) for ii in 1:3)
     ρf  = SVector{3}( Itp1D_scalar1( LU.Pf_lt, LU.ρf_lt[:], Pf[ii], LU.ΔP_lt, LU.Pf_lt[1]) for ii in 1:3)
-    βf  = SVector{3}( Itp1D_scalar1( LU.Pf_lt, LU.βf_lt[:], Pf[ii], LU.ΔP_lt, LU.Pf_lt[1]) for ii in 1:3)
 
     Xs  = p.Xs_g  .- (p.Xs_g .- p.Xs_e) .* (Pf .> p.Pf_gr_out)
     
     ϕ   = 1.0 .- p.ρs_tot ./ ρs ./ Xs 
 
     # Averaging
-    ϕv  = @. 0.5 * (ϕ[1:end-1] + ϕ[2:end])
+    ϕv  = @. 0.5 * (ϕ[1:end-1]  + ϕ[2:end])
     ρfv = @. 0.5 * (ρf[1:end-1] + ρf[2:end])
 
     # Darcy flux:
@@ -56,18 +61,15 @@ function residual_local(ρT, ρT0, xc, t, p, LU, Δx, Δt, i, ncx)
     return Rρ
 end
 
-function residual(r, r0, ρT, ρT0, xc, t, p, LU, Δx, Δt, deriv)
+function residual(r, r0, ρT, ρT0, Pf_it, xc, t, p, LU, Δx, Δt, deriv)
     for i=2:size(r,1)-1 
-        # if t < p.t_pert && xc[i] <= p.wini
-        #     ρT_loc = @SVector [ρT0[i-1], ρT0[i], ρT0[i+1]]
-        # else
-            ρT_loc = @SVector [ρT[i-1], ρT[i], ρT[i+1]]
-        # end
+        ρT_loc    = @MVector [ρT[i-1], ρT[i], ρT[i+1]]
+        Pf_it_loc = @MVector [Pf_it[i-1], Pf_it[i], Pf_it[i+1]]
         if deriv == false
             r0[i] = r[i]
-            r[i]  = residual_local(ρT_loc, ρT0[i], xc[i], t, p, LU, Δx, Δt, i, length(xc))
+            r[i]  = residual_local(ρT_loc, ρT0[i], Pf_it_loc, xc[i], t, p, LU, Δx, Δt, i, length(xc))
         else
-            ∂r∂P = ForwardDiff.gradient(x->residual_local(x, ρT0[i], xc[i], t, p, LU, Δx, Δt, i, length(xc)), ρT_loc) 
+            ∂r∂P = ForwardDiff.gradient(x->residual_local(x, ρT0[i], Pf_it_loc, xc[i], t, p, LU, Δx, Δt, i, length(xc)), ρT_loc) 
             r0[i] = abs(∂r∂P[2])
             r[i]  = sum(abs.(∂r∂P))
         end
@@ -136,6 +138,7 @@ function main_HC()
 
     # Model numerics : --------------------------------------
     CFL_t    = 0.09
+    rel      = 1e-2
     eps_err  = 1e-5
     ncx      = 101                    # number of grid points
     nout     = 50
@@ -173,28 +176,30 @@ function main_HC()
     p1 = plot!(Pf_lt./1e9, ρT_lt,color=:black, linestyle=:dash, label= "ρT(LUT)", marker = 0.0,linewidth = 2.0)
     display(p1)
     # Allocate centroid arrays
-    Pf     = zeros(ncx+2)
-    ρs     = zeros(ncx+2)
-    ρf     = zeros(ncx+2)
-    ρT     = zeros(ncx+2)
-    ρT0    = zeros(ncx+2)
-    βf     = zeros(ncx+2)
-    Xs     = zeros(ncx+2)
-    ϕ      = zeros(ncx+2)
-    dρT_dτ = zeros(ncx+2)
-    Rρ     = zeros(ncx+2)
+    Pf      = zeros(ncx+2)
+    Pf_it   = zeros(ncx+2)
+    Pf_phys = zeros(ncx+2)
+    ρs      = zeros(ncx+2)
+    ρf      = zeros(ncx+2)
+    ρT      = zeros(ncx+2)
+    ρT0     = zeros(ncx+2)
+    βf      = zeros(ncx+2)
+    Xs      = zeros(ncx+2)
+    ϕ       = zeros(ncx+2)
+    dρT_dτ  = zeros(ncx+2)
+    Rρ      = zeros(ncx+2)
     # DR
-    D      =  ones(ncx+2)
-    G      =  ones(ncx+2)
-    Rρ0    = zeros(ncx+2)
+    D       =  ones(ncx+2)
+    G       =  ones(ncx+2)
+    Rρ0     = zeros(ncx+2)
     # Allocate arrays for vertices
-    ϕv     = zeros(ncx+1)
-    k_ηf   = zeros(ncx+1)
+    ϕv      = zeros(ncx+1)
+    k_ηf    = zeros(ncx+1)
     # Initialise
-    Pf   .= Pbg        # Background pressure without fluid pressure perturbation
+    Pf     .= Pbg        # Background pressure without fluid pressure perturbation
     Pf[xc .<= wini] .+= Pamp
-    Pfi    = copy(Pf)
-    PfWest = Pfi[1]
+    Pfi     = copy(Pf)
+    PfWest  = Pfi[1]
     # Density look up - Initial perturbation is fully eclogitised from the start
     for ip = 1:ncx+2
         ρs[ip] = Itp1D_scalar1( Pf_lt, ρs_lt[:], Pf[ip], ΔP_lt, Pf_lt[1])
@@ -211,6 +216,7 @@ function main_HC()
     p = (
         Pf_gr_out = Pf_gr_out,
         PfWest    = PfWest,
+        ρTWest    = ρT[1],
         npow      = npow,
         k_ηf0     = k_ηf0,
         wini      = wini,
@@ -218,6 +224,7 @@ function main_HC()
         Xs_g      = Xs_g,
         Xs_e      = Xs_e,
         ρs_tot    = ρs_tot,
+        rel       = rel,
     )
 
     LU = (
@@ -228,6 +235,8 @@ function main_HC()
         ρf_lt = ρf_lt,
         βf_lt = βf_lt,
     )
+
+    Pf_it .= Pf
 
     # TIME LOOP:
     anim = @animate for it = 1:nt
@@ -244,9 +253,9 @@ function main_HC()
 
         # Define PT params
         CFL    = 0.9
-        c_fact = 0.6
+        c_fact = 0.9
         nrρ0   = 1.0
-        residual(G, D, ρT, ρT0, xc, t, p, LU, Δx, Δt, derivative)
+        residual(G, D, ρT, ρT0, Pf_it, xc, t, p, LU, Δx, Δt, derivative)
         λmax   = maximum(G ./ D)
         Δτ     = 2 / sqrt(maximum(λmax)) * CFL
         λmin   = 0.0
@@ -257,14 +266,19 @@ function main_HC()
         # Pseudo transient loop
         for iter = 1:niter
 
+            Pf_it .= Pf
+
             # Residual
-            residual(Rρ, Rρ0, ρT, ρT0, xc, t, p, LU, Δx, Δt, primitive)
+            residual(Rρ, Rρ0, ρT, ρT0, Pf_it, xc, t, p, LU, Δx, Δt, primitive)
 
             # Update pseudo-rate
             dρT_dτ .=  Rρ ./ D .+ β .* dρT_dτ
 
             # Update density
             ρT    .+=  α * dρT_dτ
+
+            # Update pressure
+            update_Pf(Pf, Pf_phys, Pf_it, ρT, t, p, LU)
 
             if iter==1 || mod(iter, nout) == 0
 
@@ -273,10 +287,12 @@ function main_HC()
                 if iter==1 nrρ0 = nrρ; end
                 @printf("Step %04d --- Iteration %05d\n", it, iter)
                 @printf("||rρ|| = %2.10e --- ||rρ/rρ0|| = %2.10e\n", nrρ, nrρ/nrρ0)
+                @show norm(Pf.-Pf_phys)
+
                 if (min(nrρ, nrρ/nrρ0) < eps_err) break; end
 
                 # Define PT params
-                residual(G, D, ρT, ρT0, xc, t, p, LU, Δx, Δt, derivative)
+                residual(G, D, ρT, ρT0, Pf_it, xc, t, p, LU, Δx, Δt, derivative)
                 λmax   = maximum(G ./ D)
                 Δτ     = 2 / sqrt(maximum(λmax)) * CFL    
                 λmin   = abs.((sum(Δτ.*dρT_dτ.*( (Rρ .- Rρ0) ./ D )))) / sum( (Δτ.*dρT_dτ).^2 )
@@ -287,7 +303,6 @@ function main_HC()
         end
 
         # Final updates
-        update_Pf(Pf, ρT, t, p, LU)
         t = t + Δt
 
         # Plot results:
